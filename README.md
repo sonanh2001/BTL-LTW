@@ -20,8 +20,8 @@
 - Thêm, xem, sửa, xóa, tìm kiếm (có phân trang) thể loại theo từ khóa
 - Xem thống kê top 5 truyện nhiều like nhất, top 5 người dùng đăng nhiều truyện nhất, top 5 thể loại nhiều truyện nhất 
 + [Phần User]
--Liệt kê truyện theo thể loại 
--Tìm kiếm truyện theo từ khóa
+- Liệt kê truyện theo thể loại 
+- Tìm kiếm truyện theo từ khóa
 3. Hồ Bá Thái – B19DCCN638
 + [Phần Admin]
 - Xem, xóa, tìm kiếm (có phân trang) truyện theo từ khóa
