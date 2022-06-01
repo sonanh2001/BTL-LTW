@@ -8,8 +8,8 @@
 + Thiết kế giao diện
 + Kiểm thử ứng dụng
 ## 1. Nguyễn Hồng Sơn Anh – B19DCCN026
-### - Phân quyền người dùng
-### - Đăng ký, đăng nhập, đăng xuất
+- Phân quyền người dùng
+- Đăng ký, đăng nhập, đăng xuất
 ### [Phần User]
 - Thêm, xem, sửa, xóa truyện
 - Thêm, xem thông tin người dùng, tìm kiếm (có phân trang) người dùng theo từ khóa
