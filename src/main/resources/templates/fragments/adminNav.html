@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http:///www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+    <div th:fragment="nav">
+        <div class="container">
+            <nav class="navbar navbar-expand-sm navbar-light bg-light">
+                <div class="header__logo">
+                    <i class="fa-solid fa-book-open mr-3" style="font-size: 30px;"></i>
+                </div>
+                <div class="collapse navbar-collapse" id="collapsibleNavId">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/categories}">Quản lý thể loại</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/blogs}">Quản lý truyện</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/users}">Quản lý người dùng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/statistic">Thống kê</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+</body>
+</html>

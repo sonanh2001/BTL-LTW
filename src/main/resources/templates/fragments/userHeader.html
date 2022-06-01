@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+</head>
+<body>
+    <div th:fragment="header">
+        <header id="header">
+            <div class="container header__container">
+                <a href="/" class="header__link">
+                    BlogTruyen.vn
+                </a>
+                <div class="header__action">
+                    <a href="/blog/create" class="btn header__link mr-4 header__button" sec:authorize="isAuthenticated()">
+                        <i class="fa-solid fa-pen header__icon mr-1"></i>
+                        <span class="header__button-title">Viết truyện</span>
+                    </a>
+                    <a class="btn header__link mr-4 header__button"
+                       sec:authorize="isAnonymous()" onclick="createNoti()" style="cursor: pointer;">
+                        <i class="fa-solid fa-pen header__icon mr-1"></i>
+                        <span class="header__button-title">Viết truyện</span>
+                    </a>
+                    <script>
+                        function createNoti() {
+                            alert('Bạn phải đăng nhập mới sử dụng chức năng này');
+                        }
+                    </script>
+                    <div class="header__username" sec:authorize="isAuthenticated()">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle header__button" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <span sec:authentication="principal.username"></span>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="triggerId">
+                                <a class="dropdown-item" th:href="@{'/user/viewPost/' + ${#authentication.getPrincipal().getUsername()}}">Quản lý tài khoản</a>
+                                <a class="dropdown-item" href="/logout">Đăng xuất</a>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn header__link header__button" href="/login" sec:authorize="isAnonymous()">Đăng nhập</a>
+                </div>
+            </div>
+        </header>
+    </div>
+</body>
+</html>

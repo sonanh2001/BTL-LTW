@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome-free-6.1.1-web/css/all.min.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/userContent.css}">
+    <script src="https://cdn.tiny.cloud/1/pqax3b7jbqs8o5yciqz9xu4v1acqh8m4q7v6ihxohomwppb9/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"></script>
+    <script>
+      tinymce.init({
+          selector: '#content',
+          plugins: [
+              'lists','powerpaste','fullscreen','help','wordcount'
+          ],
+          toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
+              'alignleft aligncenter alignright alignjustify | ' +
+              'bullist numlist checklist outdent indent | removeformat |help'
+      });
+    </script>
+  </head>
+  <body>
+  <div class="app">
+      <div sec:authorize="hasAuthority('ADMIN')">
+          <div th:replace="fragments/adminNav::nav"></div>
+      </div>
+      <div sec:authorize="hasAuthority('USER')">
+          <div th:replace="fragments/userHeader::header"></div>
+          <div th:replace="fragments/userNav::nav"></div>
+      </div>
+      <div sec:authorize="isAnonymous()">
+          <div th:replace="fragments/userHeader::header"></div>
+          <div th:replace="fragments/userNav::nav"></div>
+      </div>
+      <section class="content mt-5 mb-5" id="content__section">
+          <div class="container">
+              <div class="row">
+                  <div class="col-8 mx-auto">
+                      <h1 class="mb-4" th:text="${blog.title}"></h1>
+                      <div class="blog__info">
+                          <div class="d-flex">
+                              <div sec:authorize="hasAuthority('USER')">
+                                  <a th:href="@{'/user/viewPost/' + ${blog.userBlog.getUsername()}}" class="blog__info-user mr-3" th:text="${blog.userBlog.username}">
+                                  </a>
+                              </div>
+                              <div sec:authorize="hasAuthority('ADMIN')">
+                                  <a th:href="@{'/admin/users/viewPost/' + ${blog.userBlog.getUsername()}}" class="blog__info-user mr-3" th:text="${blog.userBlog.username}">
+                                  </a>
+                              </div>
+                              <div sec:authorize="isAnonymous()" class="d-flex">
+                                  <a th:href="@{'/user/viewPost/' + ${blog.userBlog.getUsername()}}" class="blog__info-user mr-3" th:text="${blog.userBlog.username}"></a>
+                              </div>
+                              <span class="blog__info-date" th:text="${blog.timeConvert()}"></span>
+                          </div>
+                          <div class="mt-3 d-flex align-items-center">
+                              <div sec:authorize="hasAuthority('USER')">
+                                  <a th:href="@{'/blog/like/' + ${blog.blogId}}" class="btn btn-outline-primary mr-3" th:if="${!blog.checkLike(#authentication.getPrincipal().getUsername())}">Thích</a>
+                                  <a th:href="@{'/blog/unlike/' + ${blog.blogId}}" class="btn btn-outline-primary mr-3" th:if="${blog.checkLike(#authentication.getPrincipal().getUsername())}">Bỏ Thích</a>
+                              </div>
+                              <div sec:authorize="isAnonymous()">
+                                  <button class="btn btn-outline-primary mr-3" onclick="LikeNoti()">Thích</button>
+                                  <script>
+                                      function LikeNoti() {
+                                          alert('Bạn phải đăng nhập mới được sử dụng chức năng này');
+                                      }
+                                  </script>
+                              </div>
+                              <span class="" th:text="${blog.likedUser.size()} + ' lượt thích'"></span>
+                          </div>
+                          <div sec:authorize="hasAuthority('USER')">
+                              <div class="mt-3 mb-3 d-flex" th:if="${blog.userBlog.username.equals(#authentication.getPrincipal().getUsername())}">
+                                  <a th:href="@{'/blog/edit/' + ${blog.blogId}}" class="btn btn-outline-warning mr-2">Chỉnh sửa</a>
+                                  <a th:data-id="${blog.blogId}" class="btn btn-outline-danger" style="color: red;"
+                                     onmouseover="this.style.color='black'"
+                                     onmouseout="this.style.color='red'"
+                                     onclick="showConfirmDelete(this.getAttribute('data-id'))">
+                                      Xóa
+                                  </a>
+                                  <script>
+                                      function showConfirmDelete(id) {
+                                          $('#yesOption').attr('href','/blog/delete/' + id);
+                                          $('#confirmDelete').modal('show');
+                                      }
+                                  </script>
+                              </div>
+                          </div>
+                          <h5 class="mt-3">Thể loại</h5>
+                          <ul class="blog__category mt-1">
+                              <li class="blog__category-item mr-3 mt-3" th:each="category:${blog.getCategories()}">
+                                  <div sec:authorize="hasAuthority('USER')">
+                                      <a th:href="@{'/categories/' + ${category.categoryId}}" class="btn btn-outline-primary" th:text="${category.name}"></a>
+                                  </div>
+                                  <div sec:authorize="isAnonymous()">
+                                      <a th:href="@{'/categories/' + ${category.categoryId}}" class="btn btn-outline-primary" th:text="${category.name}"></a>
+                                  </div>
+                                  <div sec:authorize="hasAuthority('ADMIN')">
+                                      <button class="btn btn-outline-primary" th:text="${category.name}" style="cursor: default;"></button>
+                                  </div>
+                              </li>
+                          </ul>
+                      </div>
+                      <img th:if="${blog.imageTitle!=null}" th:src="@{'/uploads/images/' + ${blog.imageTitle}}"
+                           class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|} blog__image" alt="">
+                      <div class="blog__content mt-4 mb-4" th:utext="${blog.content}"></div>
+                      <div class="blog__comment">
+                          <div class="blog__comment">
+                              <div class="blog__comment-title mb-2">
+                                  <i class="fa-solid fa-comments mr-2"></i>
+                                  <span class="blog__comment-title-label">BÌNH LUẬN VỀ TRUYỆN</span>
+                              </div>
+                              <form th:action="@{'/blog/postComment/' + ${blog.blogId}}" method="get" th:object="${comment}" sec:authorize="hasAuthority('USER')">
+                                  <input type="hidden" th:field="*{commentId}">
+                                  <textarea cols="30" rows="3" th:field="*{content}"></textarea>
+                                  <span class="text-muted form-text" th:if="${#fields.hasErrors('content')}">Nội dung không được để trống</span>
+                                  <button class="btn btn-primary mt-1">Đăng</button>
+                              </form>
+                              <div sec:authorize="isAnonymous()">
+                                  <form>
+                                      <textarea cols="30" rows="3" id="content"></textarea>
+                                      <span class="text-muted form-text">Nội dung không được để trống</span>
+                                  </form>
+                                  <button class="btn btn-primary mt-1" onclick="postNoti()">Đăng</button>
+                                  <script>
+                                      function postNoti() {
+                                          alert('Bạn phải đăng nhập mới được sử dụng chức năng này');
+                                      }
+                                  </script>
+                              </div>
+                              <div class="mt-3">
+                                  <span class="comment__quantity" th:text="${blog.getComments().size()}"></span>
+                                  <span>BÌNH LUẬN</span>
+                              </div>
+                              <ul class="comment__list mt-3">
+                                  <li class="comment__list-item" th:each="item:${blog.getComments()}">
+                                      <div class="d-flex align-items-center">
+                                          <div sec:authorize="hasAuthority('USER')">
+                                              <a th:href="@{'/user/viewPost/' + ${item.getUserComment().username}}"
+                                                 class="comment__username mb-3 mr-2" th:text="${item.getUserComment().username}"></a>
+                                          </div>
+                                          <div sec:authorize="isAnonymous()">
+                                              <a th:href="@{'/user/viewPost/' + ${item.getUserComment().username}}"
+                                                 class="comment__username mb-3 mr-2" th:text="${item.getUserComment().username}"></a>
+                                          </div>
+                                          <div sec:authorize="hasAuthority('ADMIN')">
+                                              <a th:href="@{'/admin/users/viewPost/' + ${item.getUserComment().username}}"
+                                                 class="comment__username mb-3 mr-2" th:text="${item.getUserComment().username}"></a>
+                                          </div>
+                                          <span class="comment__date" th:text="${item.timeConvert()}"></span>
+                                      </div>
+                                      <div class="comment__content" th:utext="${item.content}">
+                                      </div>
+                                      <div sec:authorize="hasAuthority('ADMIN')">
+                                          <a th:data-id="${item.commentId}" style="color:white;"
+                                             onclick="showConfirmDeleteCommentAdmin(this.getAttribute('data-id'))"
+                                                  class="btn btn-danger mb-2">Xóa</a>
+                                          <script>
+                                              function showConfirmDeleteCommentAdmin(id) {
+                                                  $('#yesOptionComment').attr('href','/admin/blogs/deleteComment/' + id);
+                                                  $('#confirmDeleteComment').modal('show');
+                                              }
+                                          </script>
+                                      </div>
+                                      <div sec:authorize="hasAuthority('USER')">
+                                          <a th:data-id="${item.commentId}" style="color:white;" onclick="showConfirmDeleteCommentUser(this.getAttribute('data-id'))"
+                                             th:if="${item.getUserComment().username.equals(#authentication.getPrincipal().getUsername())}"
+                                             class="btn btn-danger mb-2">Xóa</a>
+                                          <script>
+                                              function showConfirmDeleteCommentUser(id) {
+                                                  $('#yesOptionComment').attr('href','/blog/deleteComment/' + id);
+                                                  $('#confirmDeleteComment').modal('show');
+                                              }
+                                          </script>
+                                      </div>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+  </div>
+  <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Xác nhận xóa</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  Bạn có muốn xóa truyện này không?
+              </div>
+              <div class="modal-footer">
+                  <a class="btn btn-danger" id="yesOption">Có</a>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="modal fade" id="confirmDeleteComment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Xác nhận xóa</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  Bạn có muốn xóa Comment này không?
+              </div>
+              <div class="modal-footer">
+                  <a class="btn btn-danger" id="yesOptionComment">Có</a>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="to-top">
+      <a href="#" class="btn btn-primary to-top__link">
+          <i class="fa-solid fa-arrow-up"></i>
+      </a>
+  </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

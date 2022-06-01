@@ -1,0 +1,33 @@
+.user__manage-info{
+    background-color: #15253B;
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.4);
+}
+.avatar-wrapper{
+}
+.avatar{
+    width: 100%;
+    border-radius:50%;
+}
+.button-wrapper{
+
+}
+.user-info__button{
+    min-width: 130px;
+}
+.user-info{
+
+}
+.user-info__item{
+    display: flex;
+}
+.user-info__label{
+
+}
+.user-info__value{
+    margin: 0;
+    padding: 0;
+}
+.user__manage-table{
+    width: 100%;
+    border: 1px solid #ccc;
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+</head>
+<body>
+    <div th:fragment="nav">
+        <nav id="nav">
+            <div class="container">
+                <nav class="navbar navbar-expand-sm navbar-light bg-light header__navbar">
+                    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="collapsibleNavId">
+                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Thể loại</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownId">
+                                    <a class="dropdown-item" th:href="@{'/categories/' + ${category.categoryId}}" th:each="category:${categories}" th:text="${category.name}"></a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/user}" class="nav-link">Tác giả</a>
+                            </li>
+                        </ul>
+
+                        <form th:action="@{/search}" class="form-inline my-2 my-lg-0" method="get">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Tìm kiếm truyện" name="keyword">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http:///www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome-free-6.1.1-web/css/all.css}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/adminNav::nav"></div>
+    <section class="content">
+        <div class="row mt-5">
+            <div class="col">
+                <div class="card">
+                    <div class="mb-3">
+                        <div class="card-header">
+                            Top 5 truyện được yêu thích nhất
+                        </div>
+                        <div class="card-body">
+                            <table class="table" style="border: solid 1px #ccc;">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Tác giả</th>
+                                    <th>Lượt thích</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="blog,iterator:${top5Blog}">
+                                    <td th:text="${iterator.index+1}"></td>
+                                    <td th:text="${blog.title}"></td>
+                                    <td th:text="${blog.userBlog.getUsername()}"></td>
+                                    <td th:text="${blog.getLikedUser().size()}"></td>
+                                    <td>
+                                        <a th:href="@{'/admin/blogs/view/' + ${blog.blogId}}" class="btn btn-primary">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a th:data-id="${blog.blogId}" class="btn btn-danger"
+                                           onclick="showConfirmDeleteBlog(this.getAttribute('data-id'))" style="cursor: pointer;color: white;">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </a>
+                                    </td>
+                                    <script>
+                                        function showConfirmDeleteBlog(id) {
+                                            $('#yesOptionBlog').attr('href','/admin/blogs/delete/' + id);
+                                            $('#confirmDeleteBlog').modal('show');
+                                        }
+                                    </script>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="card-header">
+                            Top 5 thể loại nhiều truyện nhất
+                        </div>
+                        <div class="card-body">
+                            <table class="table" style="border: solid 1px #ccc;">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Số lượng truyện</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="category,iterator:${top5Category}">
+                                    <td th:text="${iterator.index+1}"></td>
+                                    <td th:text="${category.name}"></td>
+                                    <td th:text="${category.getBlogs().size()}"></td>
+                                    <td>
+                                        <a th:href="@{'/admin/categories/edit/' + ${category.categoryId}}" class="btn btn-warning">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                        <a th:data-id="${category.categoryId}" class="btn btn-danger"
+                                           onclick="showConfirmDeleteCategory(this.getAttribute('data-id'))" style="cursor: pointer;color: white;">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </a>
+                                    </td>
+                                    <script>
+                                        function showConfirmDeleteCategory(id) {
+                                            $('#yesOptionCategory').attr('href','/admin/categories/delete/' + id);
+                                            $('#confirmDeleteCategory').modal('show');
+                                        }
+                                    </script>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="card-header">
+                            Top 5 người dùng đăng nhiều truyện nhất
+                        </div>
+                        <div class="card-body">
+                            <table class="table" style="border: solid 1px #ccc;">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Email</th>
+                                    <th>Truyện đã viết</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="user,iterator:${top5User}" th:if="${user.role.equals('USER')}">
+                                    <td th:text="${iterator.index+1}"></td>
+                                    <td th:text="${user.username}"></td>
+                                    <td th:text="${user.email}"></td>
+                                    <td th:text="${user.getBlogs().size()}"></td>
+                                    <td>
+                                        <a th:href="@{'/admin/users/viewPost/' + ${user.username}}" class="btn btn-primary">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a th:data-id="${user.userId}" class="btn btn-danger"
+                                           onclick="showConfirmDelete(this.getAttribute('data-id'))" style="cursor: pointer;color: white;">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </a>
+                                    </td>
+                                    <script>
+                                        function showConfirmDelete(id) {
+                                            $('#yesOptionUser').attr('href','/admin/users/delete/' + id);
+                                            $('#confirmDeleteUser').modal('show');
+                                        }
+                                    </script>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal fade" id="confirmDeleteBlog" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có muốn xóa truyện này không?
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" id="yesOptionBlog">Có</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmDeleteCategory" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có muốn xóa thể loại này không? Nếu xóa thì tất cả các
+                truyện của thể loại này cũng bị xóa theo
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" id="yesOptionCategory">Có</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmDeleteUser" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có muốn xóa người dùng này không? Nếu xóa người dùng này thì tất cả
+                truyện và comment của họ cũng bị xóa theo
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" id="yesOptionUser">Có</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<header id="header">
+    <div class="container">
+        <a href="/" class="header__link">
+            <h3 class="header__title">BlogTruyen.vn</h3>
+        </a>
+    </div>
+</header>
+<section class="content mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Đăng kí</h4>
+                    </div>
+                    <form th:action="@{/registration}" method="post" class="p-3 form__control" th:object="${user}">
+                        <div th:if="${param.success}">
+                            <div class="alert alert-info">Tạo tài khoản thành công</div>
+                        </div>
+                        <div th:if="${param.error}">
+                            <div class="alert alert-danger">Xác nhận mật khẩu không hợp lệ</div>
+                        </div>
+                        <div th:if="${message!=null}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Tên đăng nhập</label>
+                            <input type="text" name="" id="username" class="form-control" placeholder="Tên đăng nhập" th:field="*{username}">
+                            <span id="usernameId" class="text-muted" th:if="${#fields.hasErrors('username')}">Tên đăng nhập không hợp lệ</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Mật khẩu</label>
+                            <input type="password" name="" id="password" class="form-control" placeholder="Mật khẩu" th:field="*{password}">
+                            <span id="passwordId" class="text-muted" th:if="${#fields.hasErrors('password')}">Mật khẩu phải có độ dài ít nhất 6 kí tự</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Nhập lại mật khẩu</label>
+                            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="" id="email" class="form-control" placeholder="Email" th:field="*{email}">
+                            <span id="emailId" class="text-muted" th:if="${#fields.hasErrors('email')}">Yêu cầu email</span>
+                        </div>
+                        <div class="form__request">
+                            <span class="mr-2">Bạn đã có tài khoản rồi?</span>
+                            <a href="/login">Đăng nhập</a>
+                        </div>
+                        <button class="btn btn-primary mt-2">
+                            Đăng kí
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

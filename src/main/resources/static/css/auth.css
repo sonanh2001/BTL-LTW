@@ -1,0 +1,24 @@
+body{
+    background-color: #007bff;
+}
+#header{
+    background-color: white;
+    height: 44px;
+}
+.header__title{
+    line-height: 44px;
+}
+.form__control{
+    border-top: 1px solid #ccc;
+    background-color: white;
+}
+.header__link{
+    text-decoration: none;
+    color: #000;
+}
+.header__link:hover{
+    text-decoration: none;
+}
+.auth__form{
+    background-color: white;
+}

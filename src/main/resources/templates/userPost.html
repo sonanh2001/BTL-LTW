@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome-free-6.1.1-web/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/userPost.css}">
+    <script src="https://cdn.tiny.cloud/1/pqax3b7jbqs8o5yciqz9xu4v1acqh8m4q7v6ihxohomwppb9/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: '#content',
+            plugins: [
+                'lists', 'powerpaste', 'fullscreen', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist checklist outdent indent | removeformat |help'
+        });
+    </script>
+    <!-- Bootstrap CSS -->
+</head>
+<body>
+<div th:replace="fragments/userHeader::header"></div>
+<div th:replace="fragments/userNav::nav"></div>
+<section class="content mt-5 mb-5">
+    <div class="container">
+        <h3 class="mb-5 text-center" th:if="${!blog.isEdit}">Viết truyện</h3>
+        <h3 class="mb-5 text-center" th:if="${blog.isEdit}">Chỉnh sửa truyện</h3>
+        <form th:action="@{/blog/saveOrUpdate}" method="post" class="row" th:object="${blog}"
+              enctype="multipart/form-data">
+            <input type="hidden" name="" th:field="*{blogId}">
+            <input type="hidden" name="" th:field="*{createdAt}">
+            <div class="col-8">
+                <input type="text" placeholder="Tiêu đề" class="mb-2 user-title__input" th:field="*{title}">
+                <span class="text-muted form-text mb-2"
+                      th:if="${#fields.hasErrors('title')}">Tiêu đề dài ít nhất 5 ký tự</span>
+                <span class="text-muted form-text" th:if="${message!=null}" th:text="${message}"></span>
+                <textarea cols="30" rows="10" th:field="*{content}"></textarea>
+                <span class="text-muted form-text"
+                      th:if="${#fields.hasErrors('content')}">Nội dung không được để trống</span>
+            </div>
+            <div class="col-4">
+                <script>
+                    function chooseFile(fileInput) {
+                        if (fileInput.files && fileInput.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('#image').attr('src', e.target.result)
+                            }
+                            reader.readAsDataURL(fileInput.files[0]);
+                        }
+                    }
+                </script>
+                <img th:src="${blog.imageTitle!=null?  '/uploads/images/' + blog.imageTitle : ''}" width="100%"
+                     id="image"
+                     class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}"
+                     alt="">
+                <div class="form-group mt-2">
+                    <label for="" class="">Ảnh tiêu đề</label>
+                    <input type="file" onchange="chooseFile(this)" class="form-control-file" name="imageFile" id=""
+                           placeholder="" aria-describedby="">
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label" th:each="category:${categories}">
+                        <input type="checkbox" class="form-check-input" name=""
+                               th:value="${category.categoryId}" th:text="${category.name}"
+                               th:field="*{categoriesBlog}">
+                    </label>
+                </div>
+                <div class="mt-2">
+                    <span class="text-muted form-text"
+                          th:if="${categoryMess!=null}" th:text="${categoryMess}"></span>
+                </div>
+                <button class="btn btn-primary mt-4">
+                    Đăng
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
